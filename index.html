@@ -2166,7 +2166,14 @@
             return d.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' });
         }
     </script>
-   <script type="module">
+   <form id="projectForm">
+  <input type="text" id="title" placeholder="Project title" required>
+  <input type="text" id="description" placeholder="Description" required>
+  <input type="url" id="link" placeholder="Project link">
+  <button type="submit">Add Project</button>
+</form>
+
+<script type="module">
   // Import the functions you need from the SDKs you need
   import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
   import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
@@ -2206,7 +2213,27 @@
     });
   }
 
-  // Example: call loadProjects() when the page loads
+  // Connect the form to addProject()
+  document.getElementById("projectForm").addEventListener("submit", async (e) => {
+    e.preventDefault(); // stop page reload
+
+    const title = document.getElementById("title").value;
+    const description = document.getElementById("description").value;
+    const link = document.getElementById("link").value;
+
+    await addProject({
+      title: title,
+      description: description,
+      link: link,
+      createdAt: new Date()
+    });
+
+    document.getElementById("projectForm").reset(); // clear the form
+    alert("Project added!");
+    loadProjects(); // refresh console log, optional
+  });
+
+  // Load existing projects when the page loads
   loadProjects();
 </script>
 </body>
